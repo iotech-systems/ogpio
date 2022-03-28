@@ -1,6 +1,5 @@
 
 import os
-from core.gpio.gpioUtils import gpioUtils
 
 
 CMDS_DIR = "cmds"
