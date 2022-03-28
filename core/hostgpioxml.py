@@ -1,0 +1,31 @@
+
+import os.path, typing as t
+import xml.etree.ElementTree as et
+from core.strucs import driverTypes
+
+
+class hostGpioXml(object):
+
+   XML_FILE_PATH = "conf/hostgpio.xml"
+
+   def __init__(self):
+      if not os.path.exists(hostGpioXml.XML_FILE_PATH):
+         raise FileNotFoundError(f"XmlConfNotFound: {hostGpioXml.XML_FILE_PATH}")
+      self.hostgpio = et.parse(hostGpioXml.XML_FILE_PATH)
+
+   def drivers(self, _type=driverTypes.MQTT) -> t.List[et.Element]:
+      xpath = f"gpio/driver[@type=\"{_type}\"]"
+      arr: t.List[et.Element] = self.hostgpio.findall(xpath)
+      return arr
+
+   def driver_bus_by_type(self, _type: str) -> t.List[et.Element]:
+      xpath = f"gpio/driver/bus[@type=\"{_type}\"]"
+      arr: t.List[et.Element] = self.hostgpio.findall(xpath)
+      return arr
+
+   def host_name(self):
+      xml = self.hostgpio.getroot()
+      if xml is None:
+         return ""
+      # -- do --
+      return xml.attrib["name"]

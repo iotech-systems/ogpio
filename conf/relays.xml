@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<relays>
+   <modbus>
+      <devices>
+         <device bus_address="0" comm_setttngs="9600:N:8:1">
+            <relays>
+               <relay id="0" onstate="1" inverted="n" onstart="0" />
+               <relay id="1" onstate="1" inverted="n" onstart="0" />
+               <relay id="2" onstate="1" inverted="n" onstart="0" />
+               <relay id="3" onstate="1" inverted="n" onstart="0" />
+            </relays>
+            <controller type="mqtt">
+               <broker ip="10.0.40.208" uid="" pwd="">
+                  <topics>
+                     <topic type="sub" template="[hostname]/modbus/relays/[relayid]/set" />
+                     <topic type="pub" template="[hostname]/modbus/relays/[relayid]/state" />
+                  </topics>
+               </broker>
+            </controller>
+         </device>
+      </devices>
+   </modbus>
+</relays>

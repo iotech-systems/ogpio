@@ -1,0 +1,25 @@
+{"guid": "73dbda1f-d2cf-41e0-9f66-034b984ea153",
+	"dtc": "2022/02/09T22:44:32", 
+	"override": "",
+	"info": {"channel": "3"},
+	"pin": 2,
+	"cmds": [{
+			"_objtype": "pinCmd",
+			"id": "1645119159475", 
+			"on": "sunrise", 
+			"off": "14:05", 
+			"on_offset_mnts": "+20", 
+			"off_offset_mnts": "", 
+			"override": "",
+			"ondays": "su,mo,tu,we,th,fr,sa",
+			"toggle": {}
+		},{
+			"_objtype": "pinCmd",
+			"id": "1645119159488", 
+			"on": "sunset", 
+			"off": "23:59", 
+			"on_offset_mnts": "0", 
+			"off_offset_mnts": "0", 
+			"override": "",
+			"ondays": "su,mo,tu,we,th,fr,sa",
+			"toggle": {}}]}

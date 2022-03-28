@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+import queue, time
+from core.mqtt.mqttpubbot import mqttPubBot
+from core.drivers.mqttprocess import mqttProcess
+from core.machine import ETC_HOSTNAME
+
+
+MQTT_PUB_QUEUE: queue.SimpleQueue = queue.SimpleQueue()
+
+# -- start mqtt publisher bot --
+MQTT_PUB_BOT: mqttPubBot = mqttPubBot(MQTT_PUB_QUEUE)
+MQTT_PUB_BOT.start()
+
+
+# -- start mqtt driver(s) --
+mqttProcess.ETC_HOSTNAME = ETC_HOSTNAME
+mqttProcess.MQTT_PUB_QUEUE = MQTT_PUB_QUEUE
+mqttProcess.start_all()
+
+
+# -- monitor loop --
+while True:
+   print("\n\t--- open-bgpio-run-loop ---\n")
+   time.sleep(4.0)

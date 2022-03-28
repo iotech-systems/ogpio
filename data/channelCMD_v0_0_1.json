@@ -1,0 +1,28 @@
+{
+	"type": "channelCMD",
+	"ver": "0.0.1",
+	"guid": "73dbda1f-d2cf-41e0-9f66-034b984ea153",
+	"dtc": "2022/02/09T22:44:32",
+	"override": "",
+	"channel": "1",
+	"gpios": "bmc:26:out;",
+	"cmds": [
+		{"on": "noon", "off": "noon", "on_offset_mnts": "0", "off_offset_mnts": "+10", "override": ""},
+		{"on": "sunset", "off": "23:59", "on_offset_mnts": "0", "off_offset_mnts": "0", "override": ""}
+	]
+}
+
+type: string,
+ver: string -> X.X.X
+guid: string ->
+dtc: string -> rx: YYYY/MM/DDTHH:mm:ss
+channel: string -> rx: 00-99
+gpios: string -> ""
+cmds: [] -> cmd
+cmd: {
+	on, off: string -> noon,sunrise,sunset,dusk,dawn, HH:mm
+	on_offset_mnts, off_offset_mnts: string -> on, off, 1, 0
+	override: string -> on, off, 1, 0
+}
+
+
