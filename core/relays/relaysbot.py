@@ -4,7 +4,7 @@ import xml.etree.ElementTree as et
 from core.utils import utils
 
 
-RELAYS_CONFXML_PATH = "conf/relays.xml"
+RELAYS_CONFXML_PATH = "conf/relays.xml_delete"
 
 
 class relaysBot(object):
