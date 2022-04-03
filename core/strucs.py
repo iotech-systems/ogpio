@@ -215,3 +215,19 @@ class serialInfo(object):
       self.parity = arr[1][1]
       self.stopbits = int(arr[1][2])
       self.timeout = int(arr[2])
+
+
+class gpioTime(object):
+
+   def __init__(self, hr, mn):
+      self.hr = hr
+      self.mn = mn
+      self.sn = 0
+
+
+class gpioDate(object):
+
+   def __init__(self, y, m, d):
+      self.y = y
+      self.m = m
+      self.d = d

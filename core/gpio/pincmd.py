@@ -3,9 +3,8 @@ import datetime, json
 import xml.etree.ElementTree as et
 from core.utils import utils
 from core.location import location
-from core.pinstatetable import pinStateTable
-# from core.gpio.pinruntime import pinRuntime
-from core.strucs import pinToggle, cmd
+from core.pinstatetimetable import pinStateTimetable
+from core.strucs import pinToggle, cmd, gpioTime
 
 
 CMDS_DIR = "cmds"
@@ -89,8 +88,8 @@ class pinCMD(object):
          return False
 
    def __compute_boolean_state__(self) -> (bool, str, str):
-      arr: [] = self.__state_table__()
-      table = pinStateTable(arr)
+      arr: [] = self.__pin_timetable__()
+      table = pinStateTimetable(arr)
       # -- is pin in "on/active" period --
       if not table.is_pin_on_active():
          return False, "", pinCMD.NO_TOGGLE
@@ -103,52 +102,67 @@ class pinCMD(object):
       toggle_state, toggle = self.__toggle_state__(obj_cmd)
       return toggle_state, str(obj_cmd), str(toggle)
 
-   def __state_table__(self):
+   def __pin_timetable__(self) -> []:
+      # -- offset can only be applied to sun based dt --
       arrout = []
+      # -- json object/dict --
       cmds = self.jscmd["cmds"]
       for _cmd in cmds:
+         dt_on: datetime.datetime; dt_off: datetime.datetime
          # -- time on --
          on: str = _cmd["on"]
          if on.upper() in PARTS_OF_DAY:
-            # -- offset can only be applied to sun based dt --
             tmp_str: str = _cmd["on_offset_mnts"]
             on_offset: int = 0 if tmp_str == "" else int(tmp_str)
-            _cmd["on"] = self.sysloc.from_part_of_day(on.lower(), on_offset)
+            dt_on = self.sysloc.from_part_of_day(on.lower(), on_offset)
          else:
-            _cmd["on"] = self.__str_time__(on)
+            dt_on = self.__str_to_dt__(on)
+         _cmd["on"] = dt_on
          # -- time off --
          off: str = _cmd["off"]
          if off.upper() in PARTS_OF_DAY:
-            # -- offset can only be applied to sun based dt --
             tmp_str: str = _cmd["off_offset_mnts"]
             off_offset: int = 0 if tmp_str == "" else int(tmp_str)
-            _cmd["off"] = self.sysloc.from_part_of_day(off.lower(), off_offset)
+            dt_off = self.sysloc.from_part_of_day(off.lower(), off_offset)
          else:
-            _cmd["off"] = self.__str_time__(off)
+            dt_off = self.__str_to_dt__(off)
+         _cmd["off"] = dt_off
+         # ---
+         # -- check if off is pass midnight; if true + 1 day to off --
+         # ---
+         if dt_off.hour < dt_on.hour:
+            _cmd["off"] = (dt_off + datetime.timedelta(days=1))
          # -- load to arrout --
          arrout.append(_cmd)
       # -- return table --
       return arrout
 
-   def __str_dt__(self, dtstr: str) -> datetime.datetime:
+   def __str_to_dt__(self, dtstr: str) -> datetime.datetime:
       try:
          now = datetime.date.today()
          y, m, d = now.year, now.month, now.day
          h, mn = dtstr.split(":")
-         # -- set datetime --
+         # -- set datetime; assume runs on a day of action --
          dt = datetime.datetime(year=y, month=m, day=d, hour=int(h)
             , minute=int(mn), second=0, microsecond=0, tzinfo=self.sysloc.timezone())
          return dt
       except Exception as e:
          print(e)
 
-   def __str_time__(self, timestr: str) -> datetime.time:
+   def __str_to_time__(self, timestr: str) -> datetime.time:
       try:
          hr, mn = timestr.split(":")
          # -- create time object --
          _time = datetime.time(hour=int(hr), minute=int(mn), second=0
             , microsecond=0, tzinfo=self.sysloc.timezone())
          return _time
+      except Exception as e:
+         print(e)
+
+   def __gpio_time__(self, timestr) -> gpioTime:
+      try:
+         hr, mn = [int(x) for x in timestr.split(":")]
+         return gpioTime(hr, mn)
       except Exception as e:
          print(e)
 
@@ -193,3 +207,6 @@ class pinCMD(object):
 
    def __set_inverted__(self, anyval: str) -> bool:
       return anyval.upper() in ["Y", "YES"]
+
+   def __sun_name_offset__(self, name: str, state: str):
+      pass

@@ -1,4 +1,5 @@
 
+import setproctitle
 import multiprocessing
 import queue, typing as t
 from core.strucs import *
@@ -66,6 +67,7 @@ class mqttProcess(multiprocessing.Process):
 
    def run(self) -> None:
       # -- start mqtt monitor --
+      setproctitle.setproctitle("ogpio-mqtt-mon")
       self.__start_bus_drivers__()
       while True:
          self.__loop__()

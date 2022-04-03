@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-import queue, time
+import queue, time, setproctitle
 from core.mqtt.mqttpubbot import mqttPubBot
 from core.drivers.mqttprocess import mqttProcess
 from core.machine import ETC_HOSTNAME
 
+# -- main proc name --
+setproctitle.setproctitle("ogpio-edge")
 
 MQTT_PUB_QUEUE: queue.SimpleQueue = queue.SimpleQueue()
 

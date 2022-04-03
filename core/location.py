@@ -4,6 +4,7 @@ import datetime, astral, pytz
 import xml.etree.ElementTree as et
 from core.confxml import confXml
 from datetime import tzinfo
+from core.strucs import gpioTime
 
 
 class location(object):
@@ -24,7 +25,7 @@ class location(object):
    def dump(self):
       print(self.sun)
 
-   def from_part_of_day(self, name: str, offset: int = 0) -> datetime.time:
+   def from_part_of_day(self, name: str, offset: int = 0) -> datetime.datetime:
       if name not in self.sun:
          raise ValueError(f"BadKeyName: {name}")
       # -- compute datetime --
@@ -32,11 +33,23 @@ class location(object):
          raise ValueError(f"OutOfRangeOffsetValue: {offset}")
       # -- --
       sun_dt = self.sun[name]
+      # sun_dt = self.__clean_dt__(sun_dt)
+      dt = (sun_dt + datetime.timedelta(minutes=offset))
+      # -- return --
+      return dt.replace(second=0, microsecond=0)
+
+   def part_of_day(self, name: str, offset: int) -> [None, gpioTime]:
+      if name not in self.sun:
+         raise ValueError(f"BadKeyName: {name}")
+      # -- check time offset --
+      if -90 > offset > 90:
+         raise ValueError(f"OutOfRangeOffsetValue: {offset}")
+      # -- compute datetime --
+      sun_dt = self.sun[name]
       sun_dt = self.__clean_dt__(sun_dt)
       dt = sun_dt + datetime.timedelta(minutes=offset)
       _time = dt.time()
-      # -- return --
-      return _time.replace(second=0, microsecond=0)
+      return self.__gpio_time__(_time)
 
    def timezone(self) -> tzinfo:
       return self.tz_boj
@@ -59,3 +72,6 @@ class location(object):
    def __clean_dt__(self, dt: datetime.datetime) -> datetime.datetime:
       dt = dt.replace(microsecond=0)
       return dt
+
+   def __gpio_time__(self, t: datetime.time) -> gpioTime:
+      return gpioTime(t.hour, t.min)

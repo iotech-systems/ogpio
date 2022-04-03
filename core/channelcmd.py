@@ -4,7 +4,7 @@ import xml.etree.ElementTree as et
 from core.utils import utils
 from core.xmlattribs import channelElm
 from core.location import location
-from core.pinstatetable import pinStateTable
+from core.pinstatetimetable import pinStateTimetable
 from core.strucs import pinToggle, cmd
 
 
@@ -96,7 +96,7 @@ class channelCMD(object):
 
    def __compute_state_bool__(self) -> bool:
       arr: [] = self.__state_table__()
-      table = pinStateTable(arr)
+      table = pinStateTimetable(arr)
       # -- is pin in "on/active" period --
       if not table.is_pin_on_active():
          return False
