@@ -17,12 +17,12 @@ class pinStateTimetable(object):
       dt_now = dt_now.replace(microsecond=0)
       # -- find on time slot --
       for cmd in self.cmds:
-         xid = cmd["id"]
+         cmdid = cmd["id"]
          dt_on: datetime.datetime = cmd["on"]
          dt_off: datetime.datetime = cmd["off"]
          # -- check times --
          if dt_on < dt_now < dt_off:
-            self.__print_match__(xid, dt_on, dt_now, dt_off, "MATCH!")
+            self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MATCH!")
             self.active_cmd = cmd
             return True
          else:
@@ -32,7 +32,7 @@ class pinStateTimetable(object):
 
    def __print_match__(self, xid: int, on: datetime.datetime
          , now: datetime.datetime, off: datetime.datetime, msg: str):
-      print(f"    + + + id: {xid} + + +\n\ton: {on}")
+      print(f"    + + + id: {xid} + + +\n\t on: {on}")
       print(f"\tnow: {now}")
       print(f"\toff: {off}\n\t-- {msg} --")
 
