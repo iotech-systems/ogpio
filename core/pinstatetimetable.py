@@ -26,10 +26,12 @@ class pinStateTimetable(object):
             self.active_cmd = cmd
             return True
          # -- this should be run over midnight --
-         elif (dt_on > dt_off) and (dt_now < dt_off):
-            self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MIDNIGHT MATCH!")
-            self.active_cmd = cmd
-            return True
+         elif dt_on.hour > dt_off.hour:
+            if (dt_on < dt_now) or ((dt_now.hour < dt_off.hour)
+                  and (dt_now.minute < dt_off.minute)):
+               self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MIDNIGHT MATCH!")
+               self.active_cmd = cmd
+               return True
       # -- not found --
       return False
 
