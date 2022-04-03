@@ -14,6 +14,7 @@ class pinStateTimetable(object):
       # -- reset active cmd --
       self.active_cmd = None
       dt_now = datetime.datetime.now(tz=self.sysloc.timezone())
+      dt_now.replace(microsecond=0)
       # -- find on time slot --
       for cmd in self.cmds:
          xid = cmd["id"]
