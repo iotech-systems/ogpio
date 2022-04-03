@@ -32,7 +32,7 @@ class pinStateTimetable(object):
 
    def __print_match__(self, xid: int, on: datetime.datetime
          , now: datetime.datetime, off: datetime.datetime, msg: str):
-      print(f"    + + + id: {xid} + + +\n\t on: {on}")
+      print(f"    + + + id: {xid} + + +\n\ton:  {on}")
       print(f"\tnow: {now}")
       print(f"\toff: {off}\n\t-- {msg} --")
 
