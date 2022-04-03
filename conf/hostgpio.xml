@@ -25,6 +25,17 @@
                </pins>
             </node>
          </bus>
+         <bus type="modbus" enabled="1" args="id:=0;port:=;usb-usb-0:1.5.1:1.0-port0;ping:=0,1;">
+            <!-- per device -->
+            <node args="address:=0;settings:=9600:8N1:25;">
+               <pins>
+                  <pin id="0" lbl="relay_00" inverted="n" direction="out" onstart="0" />
+                  <pin id="1" lbl="relay_01" inverted="n" direction="out" onstart="0" />
+                  <pin id="2" lbl="relay_02" inverted="n" direction="out" onstart="0" />
+                  <pin id="3" lbl="relay_03" inverted="n" direction="out" onstart="0" />
+               </pins>
+            </node>
+         </bus>
       </driver>
    </gpio>
 </hostgpio>
