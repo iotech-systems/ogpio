@@ -14,28 +14,28 @@ class pinStateTimetable(object):
       # -- reset active cmd --
       self.active_cmd = None
       dt_now = datetime.datetime.now(tz=self.sysloc.timezone())
-      dt_now = dt_now.replace(microsecond=0)
+      time_now = dt_now.replace(microsecond=0).time()
       # -- find on time slot --
       for cmd in self.cmds:
          cmdid = cmd["id"]
-         dt_on: datetime.datetime = cmd["on"]
-         dt_off: datetime.datetime = cmd["off"]
+         time_on: datetime.time = cmd["on"].time()
+         time_off: datetime.time = cmd["off"].time()
          # -- check times; return on first match --
-         if dt_on.time() < dt_now.time() < dt_off.time():
-            self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MATCH!")
+         if time_on < time_now < time_off:
+            self.__print_match__(cmdid, time_on, time_now, time_off, "MATCH!")
             self.active_cmd = cmd
             return True
          # -- this should be run over midnight --
-         elif (dt_now.time() > dt_on.time() > dt_off.time()) \
-               or (dt_on.time() > dt_off.time() > dt_now.time()):
-            self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MIDNIGHT MATCH!")
+         elif (time_now > time_on > time_off) \
+               or (time_on > time_off > time_now):
+            self.__print_match__(cmdid, time_on, time_now, time_off, "MIDNIGHT MATCH!")
             self.active_cmd = cmd
             return True
       # -- not found --
       return False
 
-   def __print_match__(self, xid: int, on: datetime.datetime
-         , now: datetime.datetime, off: datetime.datetime, msg: str):
+   def __print_match__(self, xid: int, on: datetime.time
+         , now: datetime.time, off: datetime.time, msg: str):
       print(f"    + + + id: {xid} + + +\n\ton:  {on}")
       print(f"\tnow: {now}")
       print(f"\toff: {off}\n\t-- {msg} --")
