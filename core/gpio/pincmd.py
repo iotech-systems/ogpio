@@ -108,30 +108,21 @@ class pinCMD(object):
       # -- json object/dict --
       cmds = self.jscmd["cmds"]
       for _cmd in cmds:
-         dt_on: datetime.datetime; dt_off: datetime.datetime
          # -- time on --
-         on: str = _cmd["on"]
-         if on.upper() in PARTS_OF_DAY:
-            tmp_str: str = _cmd["on_offset_mnts"]
-            on_offset: int = 0 if tmp_str == "" else int(tmp_str)
-            dt_on = self.sysloc.from_part_of_day(on.lower(), on_offset)
-         else:
-            dt_on = self.__str_to_dt__(on)
+         dt_on: datetime.datetime = self.__sun_name_offset__(_cmd, "on")
          _cmd["on"] = dt_on
          # -- time off --
-         off: str = _cmd["off"]
-         if off.upper() in PARTS_OF_DAY:
-            tmp_str: str = _cmd["off_offset_mnts"]
-            off_offset: int = 0 if tmp_str == "" else int(tmp_str)
-            dt_off = self.sysloc.from_part_of_day(off.lower(), off_offset)
-         else:
-            dt_off = self.__str_to_dt__(off)
+         dt_off: datetime.datetime = self.__sun_name_offset__(_cmd, "off")
          _cmd["off"] = dt_off
          # ---
          # -- check if off is pass midnight; if true + 1 day to off --
          # ---
+         _days = 0
+         # -- date the cmd is running --
+         _now = datetime.datetime.now()
          if dt_off.hour < dt_on.hour:
-            _cmd["off"] = (dt_off + datetime.timedelta(days=1))
+            _days = 1
+         _cmd["off"] = (dt_off + datetime.timedelta(days=_days))
          # -- load to arrout --
          arrout.append(_cmd)
       # -- return table --
@@ -208,5 +199,13 @@ class pinCMD(object):
    def __set_inverted__(self, anyval: str) -> bool:
       return anyval.upper() in ["Y", "YES"]
 
-   def __sun_name_offset__(self, name: str, state: str):
-      pass
+   def __sun_name_offset__(self, _cmd: dict, state: str) -> datetime.datetime:
+      timestr = _cmd[state]
+      if timestr.upper() in PARTS_OF_DAY:
+         tmp_str: str = _cmd[f"{state}_offset_mnts"]
+         offset: int = 0 if tmp_str == "" else int(tmp_str)
+         dt_time = self.sysloc.from_part_of_day(timestr.lower(), offset)
+      else:
+         dt_time = self.__str_to_dt__(timestr)
+      # -- return --
+      return dt_time
