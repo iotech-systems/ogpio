@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+apt install -y python3-pip
+
 pip3 install paho-mqtt
 pip3 install minimalmodbus
 pip3 install astral
