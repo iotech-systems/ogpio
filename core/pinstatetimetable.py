@@ -20,13 +20,16 @@ class pinStateTimetable(object):
          cmdid = cmd["id"]
          dt_on: datetime.datetime = cmd["on"]
          dt_off: datetime.datetime = cmd["off"]
-         # -- check times --
+         # -- check times; return on first match --
          if dt_on < dt_now < dt_off:
             self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MATCH!")
             self.active_cmd = cmd
             return True
-         else:
-            pass
+         # -- this should be run over midnight --
+         elif (dt_on > dt_off) and (dt_now < dt_off):
+            self.__print_match__(cmdid, dt_on, dt_now, dt_off, "MIDNIGHT MATCH!")
+            self.active_cmd = cmd
+            return True
       # -- not found --
       return False
 
