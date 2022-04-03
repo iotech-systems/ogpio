@@ -14,6 +14,7 @@ PARTS_OF_DAY = ["SUNSET", "SUNRISE", "DAWN", "DUSK", "NOON"]
 class pinCMD(object):
 
    PIN_TOGGLE_TABLE = {}
+   PIN_SET_ACTIVE_ON_DAY = {}
    NO_TOGGLE = "toggle[]"
 
    def __init__(self, pin_full_adr: str, jsbuff: str, invert: str):
@@ -105,24 +106,17 @@ class pinCMD(object):
    def __pin_timetable__(self) -> []:
       # -- offset can only be applied to sun based dt --
       arrout = []
+      ON = "on"; OFF = "off"; CMDS = "cmds"
+      _now = datetime.datetime.now()
       # -- json object/dict --
-      cmds = self.jscmd["cmds"]
+      cmds = self.jscmd[CMDS]
       for _cmd in cmds:
          # -- time on --
-         dt_on: datetime.datetime = self.__sun_name_offset__(_cmd, "on")
-         _cmd["on"] = dt_on
+         dt_on: datetime.datetime = self.__dt_with_offset__(_cmd, ON)
+         _cmd[ON] = dt_on
          # -- time off --
-         dt_off: datetime.datetime = self.__sun_name_offset__(_cmd, "off")
-         _cmd["off"] = dt_off
-         # ---
-         # -- check if off is pass midnight; if true + 1 day to off --
-         # ---
-         _days = 0
-         # -- date the cmd is running --
-         _now = datetime.datetime.now()
-         if dt_off.hour < dt_on.hour:
-            _days = 1
-         _cmd["off"] = (dt_off + datetime.timedelta(days=_days))
+         dt_off: datetime.datetime = self.__dt_with_offset__(_cmd, OFF)
+         _cmd[OFF] = dt_off
          # -- load to arrout --
          arrout.append(_cmd)
       # -- return table --
@@ -199,7 +193,7 @@ class pinCMD(object):
    def __set_inverted__(self, anyval: str) -> bool:
       return anyval.upper() in ["Y", "YES"]
 
-   def __sun_name_offset__(self, _cmd: dict, state: str) -> datetime.datetime:
+   def __dt_with_offset__(self, _cmd: dict, state: str) -> datetime.datetime:
       timestr = _cmd[state]
       if timestr.upper() in PARTS_OF_DAY:
          tmp_str: str = _cmd[f"{state}_offset_mnts"]
