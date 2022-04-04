@@ -39,4 +39,4 @@ class hostGpioXml(object):
       if self.hostgpio is None:
          return ""
       # -- do --
-      return self.hostgpio["name"]
+      return self.hostgpio.attrib["name"]
