@@ -46,4 +46,33 @@
          </driver>
       </gpio>
    </host>
+   <!-- testing -->
+   <host name="omms-edge-lab" >
+      <gpio>
+         <driver type="mqtt" id="VERSUS_CK" args="ip:=10.0.0.122;port:=1883;uid:=;pwd:=;">
+            <bus type="internal" enabled="1" args="id:=0;pinmode:=bcm;">
+               <node args="address:=0;">
+                  <pins>
+                     <!-- is_inverted:= y | yes -> output goes high on 0
+                        channel can have multiple pins but they must be set all the same
+                        as far as mode, direction & value for now -->
+                     <pin id="20" lbl="channel_02" inverted="n" direction="out" onstart="0" />
+                     <pin id="16" lbl="channel_03" inverted="n" direction="out" onstart="0" />
+                  </pins>
+               </node>
+            </bus>
+            <bus type="modbus" enabled="1" args="id:=0;port:=;path:=usb-usb-0:1.5.1:1.0-port0;ping:=0,1;">
+               <!-- per device -->
+               <node args="address:=0;settings:=9600:8N1:25;">
+                  <pins>
+                     <pin id="0" lbl="relay_00" inverted="n" direction="out" onstart="0" />
+                     <pin id="1" lbl="relay_01" inverted="n" direction="out" onstart="0" />
+                     <pin id="2" lbl="relay_02" inverted="n" direction="out" onstart="0" />
+                     <pin id="3" lbl="relay_03" inverted="n" direction="out" onstart="0" />
+                  </pins>
+               </node>
+            </bus>
+         </driver>
+      </gpio>
+   </host>
 </hosts>
