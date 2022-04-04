@@ -28,6 +28,6 @@ for x in bufstr.split(","):
    n: int = int(x, 16)
    buff.append(n)
 
-port: serial.Serial = serial.Serial(port=ttydev)
+port: serial.Serial = serial.Serial(port=ttydev, baudrate=9600, parity=serial.PARITY_NONE, stopbits=1)
 print(f"\nserial sending: {buff}\n")
 port.write(buff)
