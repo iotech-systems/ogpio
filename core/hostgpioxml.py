@@ -15,9 +15,15 @@ class hostGpioXml(object):
    def __init__(self):
       if not os.path.exists(hostGpioXml.XML_FILE_PATH):
          raise FileNotFoundError(f"XmlConfNotFound: {hostGpioXml.XML_FILE_PATH}")
-      self.xmldoc = et.parse(hostGpioXml.XML_FILE_PATH)
+      doc: et.ElementTree = et.parse(hostGpioXml.XML_FILE_PATH)
+      self.xmldoc: [None, et.ElementTree] = None
+      if doc is None:
+         pass
+      self.xmldoc = doc.getroot()
       xpath = f"host[@name=\"{ETC_HOSTNAME}\"]"
       self.hostgpio = self.xmldoc.find(xpath)
+      if self.hostgpio is None:
+         print(f"NoHostGpioFound: {ETC_HOSTNAME}")
 
    def drivers(self, _type=driverTypes.MQTT) -> t.List[et.Element]:
       xpath = f"gpio/driver[@type=\"{_type}\"]"
@@ -30,8 +36,7 @@ class hostGpioXml(object):
       return arr
 
    def host_name(self):
-      xml = self.hostgpio.getroot()
-      if xml is None:
+      if self.hostgpio is None:
          return ""
       # -- do --
-      return xml.attrib["name"]
+      return self.hostgpio["name"]

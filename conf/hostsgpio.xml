@@ -47,7 +47,7 @@
       </gpio>
    </host>
    <!-- testing -->
-   <host name="omms-edge-lab" >
+   <host name="omms-edge-lab">
       <gpio>
          <driver type="mqtt" id="VERSUS_CK" args="ip:=10.0.0.122;port:=1883;uid:=;pwd:=;">
             <bus type="internal" enabled="1" args="id:=0;pinmode:=bcm;">
