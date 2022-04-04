@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys, binascii
-import minimalmodbus as mm
+import serial
 
 
 """
@@ -28,5 +28,6 @@ for x in sys.argv[3].split(","):
    n: int = int(x, 16)
    buff.append(n)
 
-inst: mm.Instrument = mm.Instrument(port=ttydev, slaveaddress=mbadr)
-inst.serial.write(buff)
+port: serial.Serial = serial.Serial(port=ttydev)
+print(f"\nserial sending: {buff}\n")
+port.write(buff)
