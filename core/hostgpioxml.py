@@ -17,7 +17,7 @@ class hostGpioXml(object):
          raise FileNotFoundError(f"XmlConfNotFound: {hostGpioXml.XML_FILE_PATH}")
       self.xmldoc = et.parse(hostGpioXml.XML_FILE_PATH)
       xpath = f"host[@name=\"{ETC_HOSTNAME}\"]"
-      self.hostgpio = et.parse(xpath)
+      self.hostgpio = self.xmldoc.find(xpath)
 
    def drivers(self, _type=driverTypes.MQTT) -> t.List[et.Element]:
       xpath = f"gpio/driver[@type=\"{_type}\"]"
