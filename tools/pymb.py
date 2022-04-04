@@ -24,7 +24,7 @@ bufstr = sys.argv[4]
 print(f"\n\t--- running {CMD} ---")
 
 buff: bytearray = bytearray()
-for x in sys.argv[3].split(","):
+for x in bufstr.split(","):
    n: int = int(x, 16)
    buff.append(n)
 
